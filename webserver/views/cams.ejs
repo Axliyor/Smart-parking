@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JSON Table</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+      .clean-icon-button {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        font-size: inherit;
+      }
+      body {
+            background-color: #313131fb; /* Set your desired background color */
+        }
+    </style>
+  </head>
+  <body class = "p-3">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+      <div class="container-fluid">
+        <button class="navbar-toggler mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="/home"><i class="fa-solid fa-building-shield" style="color: #969494;"></i> Home</a>
+            <a class="nav-link" href="/cars"><i class="fa-solid fa-road-circle-check" style="color: #969494;"></i> Cars</a>
+            <a class="nav-link active" href="/cams"><i class="fa-solid fa-video" style="color: #FFD43B;"></i> Cameras</a>
+            <a class="nav-link" href="/logs"><i class="fa-solid fa-receipt" style="color: #969494;"></i> Logs</a>
+            <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Add new Camera
+            </button>
+            <!-- <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <form class="modal-content" action="/cams" method="post" id="myForm">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Camera Settings</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+              <div class="mb-3">
+                <label for="address" class="form-label">Stream URL</label>
+                <input type="text" class="form-control" name="address" id="address" placeholder="Enter Cam Stream URL">
+              </div>
+  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <form class="modal-content" action="/delete_cam" method="post" id="myForm2">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Camera</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure?
+            <hr>
+            <p id="delete_cam_url">URL</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <table class="table table-dark table-striped text-center">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Stream URL</th>
+          <th scope="col">Action</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <% cams.forEach(data => { %>
+        <tr>
+          <th scope="row"><%= data.id %></th>
+          <td><%= data.address %></td>
+          <td>
+            <button class="btn clean-icon-button m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick='myFunction("<%= data.id %>","<%= data.address %>")'><i class="fa-solid fa-file-pen" style="color: #FFD43B;"></i></button>
+            <button class="btn clean-icon-button m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick='myFunction2("<%= data.id %>","<%= data.address %>")'><i class="fa-solid fa-trash-can" style="color: #fd4221;"></i></button>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <script>
+      function myFunction(id, address) {
+        var element = document.getElementById("address");
+        element.value = address;
+        var form = document.getElementById("myForm");
+        form.action = "/change_cam/"+id;
+      }
+      function myFunction2(id, address) {
+        var element = document.getElementById("address");
+        element.value = address;
+        var form = document.getElementById("myForm");
+        form.action = "/change_cam/"+id;
+
+        var element = document.getElementById("delete_cam_url");
+        element.textContent = "URL: " + address;
+        var form = document.getElementById("myForm2");
+        form.action = "/delete_cam/"+id;
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

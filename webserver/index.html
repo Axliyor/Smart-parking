@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IP Camera Stream in Video Element</title>
+  <style>
+    #cameraVideo {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <img id="imageElement" src="" alt="IP Camera Image" width="640" height="480">
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+    const imageElement = document.getElementById('imageElement');
+    const imageUrl = 'http://192.168.1.4:8000/video';
+
+    // Function to update the image source
+    function updateImage() {
+        imageElement.src = `${imageUrl}?timestamp=${new Date().getTime()}`;
+    }
+
+    // Initial call to update the image
+    updateImage();
+
+    // Set the interval to update the image every 5 seconds (5000 milliseconds)
+    setInterval(updateImage, 50000);
+});
+  </script>
+</body>
+</html>
