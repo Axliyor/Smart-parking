@@ -27,12 +27,12 @@
         <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-link" href="/home"><i class="fa-solid fa-building-shield" style="color: #969494;"></i> Home</a>
-            <a class="nav-link active" href="/cars"><i class="fa-solid fa-road-circle-check" style="color: #FFD43B;"></i> Cars</a>
+            <a class="nav-link" href="/cars"><i class="fa-solid fa-road-circle-check" style="color: #969494;"></i> Cars</a>
             <a class="nav-link" href="/cams"><i class="fa-solid fa-video" style="color: #969494;"></i> Cameras</a>
-            <a class="nav-link" href="/barriers"><i class="fa-solid fa-road-barrier" style="color: #969494"></i> Barriers</a>
+            <a class="nav-link active" href="/barriers"><i class="fa-solid fa-road-barrier" style="color: #FFD43B;"></i> Barriers</a>
             <a class="nav-link" href="/logs"><i class="fa-solid fa-receipt" style="color: #969494;"></i> Logs</a>
             <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-              Add new car
+              Add new Barrier
             </button>
             <!-- <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
           </div>
@@ -43,20 +43,20 @@
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <form class="modal-content" action="/cars" method="post" id="myForm">
+        <form class="modal-content" action="/barriers" method="post" id="myForm">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Car Parameters</h1>
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Barrier Settings</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             
               <div class="mb-3">
-                <label for="user" class="form-label">User Name</label>
-                <input type="text" class="form-control" name="user" id="user" placeholder="Enter user name">
+                <label for="address" class="form-label">Control URL</label>
+                <input type="text" class="form-control" name="address" id="address" placeholder="Enter Barrier URL">
               </div>
               <div class="mb-3">
-                <label for="car_number" class="form-label">Car Number</label>
-                <input type="text" class="form-control" name="car_number" id="car_number" placeholder="Enter car number">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" name="description" id="description" placeholder="Enter Description">
               </div>
   
           </div>
@@ -70,16 +70,15 @@
     <br>
     <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <form class="modal-content" action="/delete" method="post" id="myForm2">
+        <form class="modal-content" action="/delete_barrier" method="post" id="myForm2">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Car</h1>
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Barrier</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             Are you sure?
             <hr>
-            <p id="delete_user_name">User</p>
-            <p id="delete_car_number">Car</p>
+            <p id="delete_barrier_url">URL</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -93,42 +92,47 @@
       <thead>
         <tr>
           <th scope="col">ID</th>
-          <th scope="col">User</th>
-          <th scope="col">Car Number</th>
+          <th scope="col">Control URL</th>
+          <th scope="col">Description</th>
           <th scope="col">Action</th>
 
         </tr>
       </thead>
       <tbody>
-        <% cars.forEach(data => { %>
+        <% barriers.forEach(data => { %>
         <tr>
           <th scope="row"><%= data.id %></th>
-          <td><%= data.user %></td>
-          <td><%= data.car_number %></td>
+          <td><%= data.address %></td>
+          <td><%= data.description %></td>
           <td>
-            <button class="btn clean-icon-button m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick='myFunction("<%= data.id %>","<%= data.user %>","<%= data.car_number %>")'><i class="fa-solid fa-file-pen" style="color: #FFD43B;"></i></button>
-            <button class="btn clean-icon-button m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick='myFunction2("<%= data.id %>","<%= data.user %>","<%= data.car_number %>")'><i class="fa-solid fa-trash-can" style="color: #fd4221;"></i></button>
+            <button class="btn clean-icon-button m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick='myFunction("<%= data.id %>","<%= data.address %>","<%= data.description %>")'><i class="fa-solid fa-file-pen" style="color: #FFD43B;"></i></button>
+            <button class="btn clean-icon-button m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick='myFunction2("<%= data.id %>","<%= data.address %>","<%= data.description %>")'><i class="fa-solid fa-trash-can" style="color: #fd4221;"></i></button>
           </td>
         </tr>
         <% }); %>
       </tbody>
     </table>
     <script>
-      function myFunction(id, user, car_number) {
-        var element = document.getElementById("user");
-        element.value = user;
-        var element = document.getElementById("car_number");
-        element.value = car_number;
+      function myFunction(id, address, description) {
+        var element = document.getElementById("address");
+        element.value = address;
+        var element = document.getElementById("description");
+        element.value = description;
         var form = document.getElementById("myForm");
-        form.action = "/change/"+id;
+        form.action = "/change_barrier/"+id;
       }
-      function myFunction2(id, user, car_number) {
-        var element = document.getElementById("delete_user_name");
-        element.textContent = "User: " + user;
-        var element = document.getElementById("delete_car_number");
-        element.textContent = "Car: " + car_number;
+      function myFunction2(id, address, description) {
+        var element = document.getElementById("address");
+        element.value = address;
+        var element = document.getElementById("description");
+        element.value = description;
+        var form = document.getElementById("myForm");
+        form.action = "/change_barrier/"+id;
+
+        var element = document.getElementById("delete_barrier_url");
+        element.textContent = "URL: " + address;
         var form = document.getElementById("myForm2");
-        form.action = "/delete/"+id;
+        form.action = "/delete_barrier/"+id;
       }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
