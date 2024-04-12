@@ -121,17 +121,17 @@ def process_frames(cam1, cam2, barrier):
             if not ret:
                 break
             thread = threading.Thread(target=recognize, args=(frame,))
-            # frame2 = frame.copy()
-            # start_point = (600, 350)
-            # end_point = (1200, 750)
-            # color = (155, 100, 0)
-            # thickness = 2
-            # image = cv2.rectangle(frame2, start_point, end_point, color, thickness)
-            # height, width, _ = image.shape
-            # width = int(width / 2)
-            # height = int(height / 2)
-            # image = cv2.resize(image, (width, height))
-            # cv2.imshow('cam1',image)
+            frame2 = frame.copy()
+            start_point = (600, 350)
+            end_point = (1200, 750)
+            color = (155, 100, 0)
+            thickness = 2
+            image = cv2.rectangle(frame2, start_point, end_point, color, thickness)
+            height, width, _ = image.shape
+            width = int(width / 2)
+            height = int(height / 2)
+            image = cv2.resize(image, (width, height))
+            cv2.imshow('cam1',image)
             threads.append(thread)
             thread.start()
             if cv2.waitKey(1) & 0xFF == ord('q'):
